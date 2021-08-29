@@ -12,8 +12,8 @@
 using namespace std;
 using namespace std::chrono;
 
-#define size 100000
-#define THREADS 8
+long size = 1000000;
+long THREADS = 8;
 
 
 void swap(int* first_number, int* second_number)
@@ -23,12 +23,12 @@ void swap(int* first_number, int* second_number)
     *second_number = temporary_element;
 }
 
-int partition (int array[], int low, int high)
+int partition (int* array, int low, int high)
 {
-	int pivot_element = array[high];
-    int low_element = (low - 1);
+  int pivot_element = array[high];
+  int low_element = (low - 1);
 
-    for(int x = low; x < high - 1; x++)
+    for(int x = low; x <= high-1; x++)
     { 
         if(array[x] <= pivot_element)
         { 
@@ -41,7 +41,7 @@ int partition (int array[], int low, int high)
     return (low_element + 1);
 }
 
-void quickSort(int array[], int low, int high)
+void quickSort(int* array,int low, int high)
 {
 	if (low < high)
 	{
@@ -59,7 +59,7 @@ void quickSort(int array[], int low, int high)
 	}
 }
 
-void printArray(int array[], int size)
+void printArray(int* array, int size)
 {
 	for(int x = 0; x < size; x++)
 	{
@@ -79,7 +79,7 @@ int main()
         array[x] = rand() % 100; 
     }
 
-	int n = sizeof(array)/sizeof(array[0]);
+	
 
 	omp_set_num_threads(THREADS);
 	auto start_time = high_resolution_clock::now();
@@ -87,7 +87,7 @@ int main()
 	#pragma omp parallel
 	{
 		#pragma omp single nowait
-			quickSort(array, 0, n-1);
+			quickSort(array, 0, size-1);
 	}
     auto stop_time = high_resolution_clock::now();
 	auto Sorting_Time = duration_cast<microseconds>(stop_time - start_time);
